@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
 import Contact from "./pages/Contact";
 import Projects from "./pages/Projects";
+import FooterCom from "./components/Footer";
 function App() {
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
           <Route path="/project" element={<Projects />} />
         </Routes>
       </div>
+      <FooterCom />
     </>
   );
 }
