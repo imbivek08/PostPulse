@@ -1,9 +1,11 @@
 import { Sidebar } from "flowbite-react";
-import { HiUser } from "react-icons/hi";
+import { HiDocumentText, HiUser } from "react-icons/hi";
 import { FaSignOutAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 export default function DashSideBar() {
+  const { currentUser } = useSelector((state) => state.user);
   const location = useLocation();
   const [tab, setTab] = useState("");
   useEffect(() => {
@@ -28,6 +30,17 @@ export default function DashSideBar() {
                 Profile
               </Sidebar.Item>
             </Link>
+            {currentUser.isAdmin && (
+              <Link to="/dashboard?tab=posts">
+                <Sidebar.Item
+                  active={tab === "posts"}
+                  icon={HiDocumentText}
+                  as="div"
+                >
+                  Posts
+                </Sidebar.Item>
+              </Link>
+            )}
             <Sidebar.Item icon={FaSignOutAlt}>SignOut</Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
