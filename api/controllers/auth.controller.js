@@ -46,7 +46,10 @@ export const signin = async (req, res, next) => {
     if (!permit) {
       return next(errorHandler(400, "Invalid password"));
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET
+    );
     const { password: pass, ...rest } = user._doc;
     res
       .status(200)

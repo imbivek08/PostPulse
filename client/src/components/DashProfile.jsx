@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Alert, Button, Modal, TextInput } from "flowbite-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   deleteUserFailure,
   deleteUserStart,
@@ -137,6 +137,17 @@ export default function DashProfile() {
         <Alert color="failure" className="mt-5">
           {error}
         </Alert>
+      )}
+      {currentUser.isAdmin && (
+        <Link to={"/create-post"}>
+          <Button
+            type="button"
+            gradientDuoTone="purpleToPink"
+            className="w-full mt-4"
+          >
+            Create Post
+          </Button>
+        </Link>
       )}
       <div className="text-red-500 flex justify-between mt-5">
         <span onClick={() => setShowModel(true)} className="cursor-pointer">
