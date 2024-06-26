@@ -19,17 +19,18 @@ export default function DashSideBar() {
     <div className="">
       <Sidebar>
         <Sidebar.Items>
-          <Sidebar.ItemGroup>
+          <Sidebar.ItemGroup className="flex flex-col gap-2">
             <Link to={"/dashboard?tab=profile"}>
               <Sidebar.Item
                 active={tab === "profile"}
                 icon={HiUser}
-                label="User"
+                label={currentUser.isAdmin ? "Admin" : "user"}
                 as="div"
               >
                 Profile
               </Sidebar.Item>
             </Link>
+
             {currentUser.isAdmin && (
               <Link to="/dashboard?tab=posts">
                 <Sidebar.Item
