@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Comment from "./Comment";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-
-export default function CommentSection(postId) {
+import PropTypes from 'prop-types';
+export default function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [commentError, setCommentError] = useState(null);
@@ -13,6 +13,7 @@ export default function CommentSection(postId) {
   const [showModal, setShowModal] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
   const navigate = useNavigate();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200) {
@@ -173,7 +174,7 @@ export default function CommentSection(postId) {
             </div>
           </div>
           {comments.map((comment) => (
-            <Comment
+              <Comment
               key={comment._id}
               comment={comment}
               onLike={handleLike}
@@ -216,3 +217,6 @@ export default function CommentSection(postId) {
     </div>
   );
 }
+CommentSection.propTypes = {
+  postId: PropTypes.string.isRequired,
+};

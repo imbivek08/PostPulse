@@ -1,7 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Alert, Button, Modal, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { app } from "../firebase";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import {
   deleteUserFailure,
   deleteUserStart,
@@ -12,18 +19,63 @@ import {
   updateSuccess,
 } from "../redux/features/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+
 export default function DashProfile() {
-  const { currentUser, error, loading } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  console.log(currentUser._id);
+  const filePickerRef = useRef();
+  const { currentUser, error, loading } = useSelector((state) => state.user);
+  const [imageFile, setImageFile] = useState(null);
+  const [imageFileUrl, setImageFileUrl] = useState(null);
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
   const [showModel, setShowModel] = useState(false);
   const [formData, setFormData] = useState({});
+  const [imageFileUploadProgress, setIamgeFileUploadProgress] = useState(null);
+  const [imageFileUploadError, setIamgeFileUploadError] = useState(null);
   const dispatch = useDispatch();
+  console.log(imageFileUploadProgress, imageFileUploadError);
+  console.log(imageFileUrl);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImageFileUrl(URL.createObjectURL(file));
+    }
+  };
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
+  const uploadImage = async () => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + imageFile.name;
+    const storerRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storerRef, imageFile);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setIamgeFileUploadProgress(progress.toFixed(0));
+      },
+      (error) => {
+        setIamgeFileUploadError("Could not upload error");
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageFileUrl(downloadURL);
+          setFormData({ ...formData, profilePicture: downloadURL });
+        });
+      }
+    );
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -82,14 +134,24 @@ export default function DashProfile() {
       console.log(error.message);
     }
   };
-
+  console.log(formData);
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
       <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="w-32 h-32 self-center cursor-pointer">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          ref={filePickerRef}
+          hidden
+        />
+        <div
+          className="w-32 h-32 self-center cursor-pointer"
+          onClick={() => filePickerRef.current.click()}
+        >
           <img
-            src="/profile2.jpeg"
+            src={imageFileUrl || currentUser.profilePicture}
             alt="Profile"
             className="rounded-full w-full h-full object-cover border-8 border-[lightgray]"
           />
