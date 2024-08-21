@@ -2,6 +2,10 @@
 
 This project is a full-stack MERN application developed with Vite for the frontend. The application is split into two main parts: the frontend (`client`) and the backend (`api`).
 
+## Live Demo
+
+Check out the live demo of the project [here](https://showcase-3vbg.onrender.com).
+
 ## Table of Contents
 
 - [Project Structure](#project-structure)
