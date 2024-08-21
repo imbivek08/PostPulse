@@ -68,13 +68,14 @@ DB_URL=your_mongodb_connection_url
 
 1. Start the backend server:
    in root dir(postplus) :
+
    ```bash
    npm run dev
    ```
 
-````
 2. start the frontend server:
-  ```bash
-  cd client
-  npm run dev
-````
+
+```bash
+cd client
+npm run dev
+```
