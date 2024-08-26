@@ -33,7 +33,7 @@ function App() {
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/update-post/:postId" element={<UpdatePost />} />
           </Route>
-          <Route path="/contact" element={<Contact />} />
+          
           <Route path="/project" element={<Projects />} />
           <Route path="/post/:postSlug" element={<PostPage />} />
         </Routes>
